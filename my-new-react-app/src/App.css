@@ -1,0 +1,141 @@
+    /* src/App.css */
+    
+    body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background-image: url('C:\Users\Aidar\OneDrive\Рабочий стол\website_react\my-react-website\photo_2023-11-13_14-48-34.jpg');
+        /* Use double backslashes or forward slashes in the path for Windows */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        overflow: hidden;
+        overflow-y: auto;
+        height: 100%;
+        /* Disable text visibility outside the container */
+    }
+    /* Rest of your existing styles */
+    
+    .App {
+        text-align: center;
+        border-radius: 10px;
+        padding: 20px;
+    }
+    /* Add the following styles for running text */
+    
+    .running-text {
+        white-space: nowrap;
+        animation: runningText 10s linear infinite;
+    }
+    /*  Add the following styles for question container */
+    
+    .question-container {
+        margin-bottom: 20px;
+    }
+    /* Add the following styles for answer container */
+    
+    .answer-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 5px;
+    }
+    /* Add the following styles for label */
+    
+    label {
+        margin-right: 10px;
+    }
+    /*   Add the following styles for arrow button */
+    
+    .a rrow-button {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .arrow-button::after {
+        content: '→';
+        margin-left: 5px;
+        transition: transform 0.3s;
+    }
+    
+    row-ton.disabled::after {
+        transform: rotate(180deg);
+    }
+    
+    @keyframes marquee {
+        0% {
+            transform: translateX(100%);
+        }
+        100% {
+            transform: translateX(-100%);
+        }
+    }
+    
+    .marquee-container {
+        width: 100%;
+        overflow: hidden;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 20px solid rgb(19, 1, 1);
+        -webkit-appearance: none;
+        /* Убедитесь, что стандартные стили не применяются */
+        margin-top: -8px;
+        /* Убираем некоторые стандартные отступы в некоторых браузерах */
+    }
+    
+    input[type="text"]::placeholder,
+    input[type="email"]::placeholder {
+        color: rgba(114, 145, 255, 1);
+        /* Цвет синий */
+    }
+    
+    #simple_arc {
+        display: block;
+        width: 306px;
+        height: 305px;
+    }
+    
+    #simple_arc>span[class^=w]:nth-of-type(n+0) {
+        display: block;
+        position: absolute;
+        -moz-transform-origin: 50% 100%;
+        -webkit-transform-origin: 50% 100%;
+        -o-transform-origin: 50% 100%;
+        -ms-transform-origin: 50% 100%;
+        transform-origin: 50% 100%;
+    }
+    
+    #simple_arc span {
+        font-family: 'Viga';
+        font-size: 38px;
+        font-weight: regular;
+        font-style: normal;
+        line-height: 0.65;
+        white-space: pre;
+        overflow: visible;
+        padding: 0px;
+    }
+    
+    #simple_arc .w0 {
+        -moz-transform: rotate(-1.14rad);
+        -webkit-transform: rotate(-1.14rad);
+        -o-transform: rotate(-1.14rad);
+        -ms-transform: rotate(-1.14rad);
+        transform: rotate(-1.14rad);
+        width: 21px;
+        height: 24px;
+        left: 42.7px;
+        top: 93.95px;
+    }
+    
+    .max-w-screen-xl {
+        min-height: 100vh;
+        /* Минимальная высота контейнера для занимания всего экрана */
+    }
