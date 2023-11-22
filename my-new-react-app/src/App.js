@@ -1,7 +1,8 @@
 // src/App.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import './stylesheet.css';
+import Chart from 'chart.js/auto';
 const questions = [
     { id: 1, text: 'Последние три месяца вы не растете в доходе.' },
     { id: 2, text: 'Вы испытываете негативные эмоции или сопротивление при мыслях о необходимости проявляться, привлекать клиентов, продавать ваши продукты/услуги.' },
@@ -69,6 +70,75 @@ const questions = [
     { id: 50, text: 'У вас есть бесплатные и/или недорогие продукты, чтобы клиент мог получить пользу и прогреться на более дорогую вашу услугу' },
     // Добавьте другие вопросы
 ];
+const ChartContainer = () => {
+    const chartContainer = useRef(null);
+    const chartInstance = useRef(null);
+
+    useEffect(() => {
+        if (chartInstance.current) {
+            chartInstance.current.destroy();
+        }
+
+        if (chartContainer && chartContainer.current) {
+            const ctx = chartContainer.current.getContext('2d');
+
+            chartInstance.current = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Мышление', 'Продукт', 'Первая встреча с клиентом', 'Активы и экспертность', 'Ниша и целевая аудитория', 'Каналы и связи', 'Упаковка', 'Трафик'],
+                    datasets: [{
+                        data: [50, 45, 50, 50, 50, 50, 50, 50],
+                        backgroundColor: ['rgba(244, 159, 190, 1)', 'rgba(255, 246, 166, 1)', 'rgba(255, 236, 85, 1)', 'rgba(195, 213, 120, 1)', 'rgba(134, 210, 247, 1)', 'rgba(213, 202, 249, 1)', 'rgba(255, 255, 255, 1)', 'rgba(120, 236, 146, 1)'],
+                    }],
+                },
+                options: {
+                    responsive: true,
+                },
+            });
+        }
+
+        return () => {
+            if (chartInstance.current) {
+                chartInstance.current.destroy();
+            }
+        };
+    }, []);
+
+    return <canvas ref = { chartContainer }
+    width = "400"
+    height = "300" / > ;
+};
+
+const useDataSender = () => {
+    const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
+
+    const sendDataToBackend = async(name, email, config) => { // Принимаем параметры name, email и конфигурацию
+        try {
+            const dataToSend = { email, name };
+
+            console.log('Порт сервера:', config.server.port);
+            console.log('Базовый URL API:', config.api.baseURL);
+
+            const response = await fetch(`${config.api.baseURL}/data`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataToSend),
+            });
+
+            const responseData = await response.json();
+            console.log('Данные получены от сервера:', responseData);
+        } catch (error) {
+            console.error('Ошибка отправки данных на сервер:', error);
+        }
+    };
+
+    return { email, setEmail, name, setName, sendDataToBackend };
+};
+
+
 const GroupComponent = () => {
 
     const imageStyle = {
@@ -78,8 +148,7 @@ const GroupComponent = () => {
         top: '100px',
     };
 
-    return ( <
-        div >
+    return ( < div >
         <
         img src = "image_2023-11-13_15-53-12.png"
         alt = "тест"
@@ -237,7 +306,9 @@ const Result = (totalScore) => {
                 div >
             ) : ( <
                 div > < SecondContent /
-                > < /
+                >
+                <
+                /
                 div >
             )
         } <
@@ -280,11 +351,11 @@ const Quiz = () => {
 
     const progress = ((currentQuestion + 1) / questions.length) * 100;
     if (quizCompleted) {
-        return <SecondContent totalScore = { totalScore }
-        /> ;
+        return <useDataSender / > ;
     } else {
         return ( <
-                div className = "py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 bg-gray-800 text-white" > <
+                div className = "py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 bg-gray-800 text-white" >
+                <
                 GroupComponent / > <
                 Rectangle >
                 <
@@ -481,8 +552,8 @@ const Quiz = () => {
 };
 
 const Sign = () => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+
+    const { email, setEmail, name, setName, sendDataToBackend } = useDataSender();
     const [isStarted, setIsStarted] = useState(false);
 
     const handleNameChange = (event) => {
@@ -497,7 +568,7 @@ const Sign = () => {
         setIsStarted(true);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async(event) => {
         event.preventDefault();
 
         if (name.trim() === '') {
@@ -510,14 +581,20 @@ const Sign = () => {
             return;
         }
 
-        // Если все в порядке, выполните нужные действия, например, отправку данных
-        console.log('Данные успешно отправлены:', { name, email });
-        setIsStarted(true);
+        try {
+            await sendDataToBackend(name, email); // Передаем name и email
+            setIsStarted(true);
+        } catch (error) {
+            console.error('Ошибка отправки данных:', error);
+        }
     };
+
 
     const isValidEmail = (value) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
     };
+    const config = require('./config');
+
 
     return ( <
         div className = "py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 bg-gray-800 text-white" >
